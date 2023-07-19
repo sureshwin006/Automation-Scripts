@@ -1,0 +1,1 @@
+Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | select Name
