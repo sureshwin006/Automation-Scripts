@@ -1,4 +1,4 @@
-﻿Connect-MsolService  
+Connect-MsolService  
 $users = Get-msoluser -All | where {("$($_.Licenses.AccountSkuID)" -ne "contactuscomm:STREAM" -and "$($_.Licenses.AccountSkuID)" -ne "contactuscomm:FLOW_FREE" -and $_.IsLicensed -eq $true -and $_.BlockCredential -eq $False) }  
 
 $users | select DisplayName,
@@ -12,3 +12,16 @@ $users | select DisplayName,
                 Title,
                 ValidationStatus,
                 @{N='MFA-Methods';E={($_.StrongAuthenticationMethods | where isdefault -eq 'true').MethodType}},@{N='MFA_Requirements';E={($_.StrongAuthenticationRequirements).state}},@{N='AuthenticationType';E={($_.StrongAuthenticationPhoneAppDetails).AuthenticationType}},@{N='DeviceName';E={($_.StrongAuthenticationPhoneAppDetails).DeviceName}},@{N='NotificationType';E={($_.StrongAuthenticationPhoneAppDetails).NotificationType}},@{N='OathTokenTimeDrift';E={($_.StrongAuthenticationPhoneAppDetails).OathTokenTimeDrift}},@{N='AlternativePhoneNumber';E={($_.StrongAuthenticationUserDetails).AlternativePhoneNumber}},@{N='AlternativeEmail';E={($_.StrongAuthenticationUserDetails).Email}},@{N='PhoneNumber';E={($_.StrongAuthenticationUserDetails).PhoneNumber}} | Export-Csv 'C:\New folder\MFA_SSPR_info.csv'
+
+
+#--------------------------------------------
+# Note :
+# For SSPR
+# In the output CSV file if these two columns are empty that means those users are not registered for SSPR
+#AlternativeEmail
+#PhoneNumber
+
+#For MFA 
+# If the below column is not enforced that means those users are not enforced with MFA
+#MFA_Requirements
+#------------------------------------------
